@@ -4,6 +4,8 @@ OpenSSL RSA Playground
 Hi! This is a very simple repo with commands for working
 with RSA keys in a very easy way.
 
+The simplest way:
+
 ```bash
 # Create the key
 ssh-keygen -t rsa -b 2048 -f private.key
@@ -22,6 +24,29 @@ openssl rsautl -encrypt -pubin -inkey public.key -in mensagem -out mensagem_prot
 
 # Decrypt
 openssl rsautl -decrypt -inkey private.key -in mensagem_protegida -out mensagem_decifrada
+
+```
+
+The same, but using a password protected key:
+
+```bash
+# Create the key
+ssh-keygen -t rsa -b 2048 -P IamAverySafePassword -f private.key
+
+# Remove the SSH public key
+rm -f private.key.pub
+
+# Create the true public key
+openssl rsa -in private.key -passin pass:IamAverySafePassword -pubout -out public.key
+
+# Create a message
+vim mensagem
+
+# Protect the message
+openssl rsautl -encrypt -pubin -inkey public.key -in mensagem -out mensagem_protegida
+
+# Decrypt
+openssl rsautl -decrypt -inkey private.key -passin pass:IamAverySafePassword -in mensagem_protegida -out mensagem_decifrada
 
 ```
 
